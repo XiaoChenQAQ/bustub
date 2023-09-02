@@ -11,9 +11,9 @@
 //===----------------------------------------------------------------------===//
 
 #pragma once
-
+#include <memory>
+#include <string>
 #include <vector>
-
 #include "execution/executor_context.h"
 #include "execution/executors/abstract_executor.h"
 #include "execution/plans/seq_scan_plan.h"
@@ -50,5 +50,19 @@ class SeqScanExecutor : public AbstractExecutor {
  private:
   /** The sequential scan plan node to be executed */
   const SeqScanPlanNode *plan_;
+
+  /** If the seqscan has any filtering condition */
+  std::shared_ptr<AbstractExpression> filter_predicate_;
+
+  /** The end of cursor iterator */
+  TableIterator end_;
+
+  /** The current cursor scanning the table */
+  TableIterator cursor_;
+
+  /** If this exectuor acquired a lock */
+  bool obtain_lock_{false};
+
+  std::string table_name_{};
 };
 }  // namespace bustub
